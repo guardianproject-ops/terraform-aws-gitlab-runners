@@ -1,0 +1,28 @@
+name: terraform-aws-gitlab-runners
+license: GPL3
+gitlab_repo: guardianproject-ops/terraform-aws-gitlab-runners
+
+description: |-
+  Terraform module to deploy gitlab ci runners
+
+# Introduction to the project
+introduction: |-
+  TODO
+
+usage: |-
+
+  ```terraform
+  module "gitlab_runners" {
+    source = "git::https://gitlab.com/guardianproject-ops/terraform-aws-gitlab-runners?ref=main"
+    context = module.this.context
+  }
+  ```
+  TODO
+
+include:
+  - docs/terraform.md
+
+contributors:
+  - name: "Abel Luck"
+    gitlab: "abelxluck"
+    gitlab_id: 941123
