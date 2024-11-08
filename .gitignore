@@ -49,3 +49,9 @@ build-harness*
 
 *.iml
 .idea
+
+test/builds
+test/terraform.tfst*
+test/.terraform
+test/.terraform.lock.hcl
+test/terraform.tfvars

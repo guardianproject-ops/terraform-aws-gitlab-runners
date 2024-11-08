@@ -5,16 +5,18 @@ gitlab_repo: guardianproject-ops/terraform-aws-gitlab-runners
 description: |-
   Terraform module to deploy gitlab ci runners
 
-# Introduction to the project
 introduction: |-
-  TODO
+  Deploy autoscaling gitlab runners.
 
 usage: |-
 
   ```terraform
-  module "gitlab_runners" {
-    source = "git::https://gitlab.com/guardianproject-ops/terraform-aws-gitlab-runners?ref=main"
-    context = module.this.context
+  module "test_gitlab_runner" {
+      source = "git::https://gitlab.com/guardianproject-ops/terraform-aws-gitlab-runners?ref=main"
+      context = module.this.context
+      vpc_cidr          = "10.0.128.0/20"
+      subnets_cidr      = "10.0.128.0/24"
+      docker_auth_token = var.docker_auth_token # optional to improve `docker pull`s
   }
   ```
   TODO
