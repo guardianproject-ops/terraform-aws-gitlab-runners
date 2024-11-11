@@ -14,3 +14,32 @@ variable "docker_auth_token" {
   description = "A docker.io auth token (optional)"
   sensitive   = true
 }
+
+variable "runner_ami_owners" {
+  description = "The list of owners used to select the AMI of the Runner instance."
+  type        = list(string)
+  default     = ["amazon"]
+}
+
+variable "runner_ami_filter" {
+  description = "List of maps used to create the AMI filter for the Runner AMI. Must resolve to an Amazon Linux 1, 2 or 2023 image."
+  type        = map(list(string))
+
+  default = {
+    name = ["al2023-ami-2023*-x86_64"]
+  }
+}
+
+variable "worker_ami_filter" {
+  description = "List of maps used to create the AMI filter for the Worker AMI. Should be Ubuntu"
+  type        = map(list(string))
+
+  default = {
+    name = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+
+variable "worker_ami_owners" {
+  type    = list(string)
+  default = ["099720109477"]
+}

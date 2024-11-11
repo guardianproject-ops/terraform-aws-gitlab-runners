@@ -62,6 +62,7 @@ locals {
   })
 
 }
+
 module "runner" {
   source  = "cattle-ops/gitlab-runner/aws"
   version = "7.15.0"
@@ -79,9 +80,30 @@ module "runner" {
     preregistered_runner_token_ssm_parameter_name = "${module.this.id}-runner-token"
   }
 
+  runner_ami_filter                          = var.runner_ami_filter
+  runner_ami_owners                          = var.runner_ami_owners
+  runner_worker_docker_autoscaler_ami_filter = var.worker_ami_filter
+  runner_worker_docker_autoscaler_ami_owners = var.worker_ami_owners
+
   runner_role = {
     additional_tags = module.this.tags
   }
+
+  # This one is definitely required for DIND
+  runner_worker_docker_add_dind_volumes = true
+
+  # these, I think not.
+  #runner_worker_docker_options = {
+  #  privileged = "true" # this one is scary
+  #  volumes    = ["/cache", "/certs/client"]
+  #}
+
+  #runner_worker_docker_volumes_tmpfs = [
+  #  {
+  #    volume  = "/var/opt/cache",
+  #    options = "rw,noexec"
+  #  }
+  #]
 
   runner_worker_docker_autoscaler_role = {
     additional_tags = module.this.tags
