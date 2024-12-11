@@ -47,11 +47,15 @@ No requirements.
 | <a name="input_name"></a> [name](#input\_name) | ID element. Usually the component or solution name, e.g. 'app' or 'jenkins'.<br/>This is the only ID element not also included as a `tag`.<br/>The "name" tag is set to the full `id` string. There is no tag with the value of the `name` input. | `string` | `null` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique | `string` | `null` | no |
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Terraform regular expression (regex) string.<br/>Characters matching the regex will be removed from the ID elements.<br/>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
+| <a name="input_runner_ami_filter"></a> [runner\_ami\_filter](#input\_runner\_ami\_filter) | List of maps used to create the AMI filter for the Runner AMI. Must resolve to an Amazon Linux 1, 2 or 2023 image. | `map(list(string))` | <pre>{<br/>  "name": [<br/>    "al2023-ami-2023*-x86_64"<br/>  ]<br/>}</pre> | no |
+| <a name="input_runner_ami_owners"></a> [runner\_ami\_owners](#input\_runner\_ami\_owners) | The list of owners used to select the AMI of the Runner instance. | `list(string)` | <pre>[<br/>  "amazon"<br/>]</pre> | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | <a name="input_subnets_cidr"></a> [subnets\_cidr](#input\_subnets\_cidr) | CIDR block for the subnets | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`).<br/>Neither the tag keys nor the tag values will be modified by this module. | `map(string)` | `{}` | no |
 | <a name="input_tenant"></a> [tenant](#input\_tenant) | ID element \_(Rarely used, not included by default)\_. A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR block for the VPC | `string` | n/a | yes |
+| <a name="input_worker_ami_filter"></a> [worker\_ami\_filter](#input\_worker\_ami\_filter) | List of maps used to create the AMI filter for the Worker AMI. Should be Ubuntu | `map(list(string))` | <pre>{<br/>  "name": [<br/>    "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"<br/>  ]<br/>}</pre> | no |
+| <a name="input_worker_ami_owners"></a> [worker\_ami\_owners](#input\_worker\_ami\_owners) | n/a | `list(string)` | <pre>[<br/>  "099720109477"<br/>]</pre> | no |
 
 ## Outputs
 

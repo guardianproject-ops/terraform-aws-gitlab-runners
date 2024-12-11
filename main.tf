@@ -65,7 +65,7 @@ locals {
 
 module "runner" {
   source  = "cattle-ops/gitlab-runner/aws"
-  version = "7.15.0"
+  version = "8.1.0"
 
   environment       = module.this.id
   iam_object_prefix = module.this.id
@@ -121,10 +121,12 @@ module "runner" {
     collect_autoscaling_metrics = ["GroupDesiredCapacity", "GroupInServiceCapacity"]
     name                        = "${module.this.id}-instance"
     ssm_access                  = true
+    type                        = "t3.small"
+    additional_tags             = module.this.tags
   }
 
   runner_worker = {
-    max_jobs            = 5 # this is the maximum number of auto-scaled instances
+    max_jobs            = 10 # this is the maximum number of auto-scaled instances
     request_concurrency = 5
     type                = "docker-autoscaler"
     ssm_access          = true
