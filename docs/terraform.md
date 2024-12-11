@@ -13,7 +13,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_runner"></a> [runner](#module\_runner) | cattle-ops/gitlab-runner/aws | 7.15.0 |
+| <a name="module_runner"></a> [runner](#module\_runner) | cattle-ops/gitlab-runner/aws | 8.1.0 |
 | <a name="module_subnets"></a> [subnets](#module\_subnets) | cloudposse/dynamic-subnets/aws | 2.4.2 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | cloudposse/vpc/aws | 2.2.0 |
