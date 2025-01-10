@@ -2,19 +2,10 @@ locals {
   enabled                = module.this.enabled
   availability_zones     = sort(slice(data.aws_availability_zones.this.names, 0, 2))
   default_az             = local.availability_zones[0]
-  partition              = data.aws_partition.current.partition
   vpc_id                 = module.vpc[0].vpc_id
-  vpc_cidr_block         = module.vpc[0].vpc_cidr_block
   private_subnet_ids     = module.subnets[0].private_subnet_ids
-  private_subnet_cidrs   = module.subnets[0].private_subnet_cidrs
   private_subnet_main_id = module.subnets[0].az_private_subnets_map[local.default_az][0]
-
-  region = data.aws_region.current.name
-
 }
-data "aws_partition" "current" {}
-data "aws_caller_identity" "this" {}
-data "aws_region" "current" {}
 data "aws_availability_zones" "this" {
   state = "available"
 }
