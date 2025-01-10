@@ -1,0 +1,11 @@
+---
+image: python:latest
+
+stages:
+  - test
+
+test:hello:
+  stage: test
+  script:
+    - echo hello world
+
