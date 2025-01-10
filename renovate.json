@@ -1,23 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices",
-    ":semanticCommitTypeAll(chore)",
-    "group:all",
-    "schedule:weekly"
-  ],
-  "ignorePaths": ["**/.terraform-version"],
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": false
-    },
-    {
-      "matchDepTypes": ["devDependencies"],
-      "automerge": false
-    }
-  ],
-  "platformAutomerge": false,
+  "extends": ["gitlab>guardianproject-ops/projects:renovate-terraform.json5"],
   "customManagers": [
     {
       "customType": "regex",
