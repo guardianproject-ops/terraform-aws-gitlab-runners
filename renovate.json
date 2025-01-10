@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    ":semanticCommitTypeAll(chore)",
+    "group:all",
+    "schedule:weekly"
+  ],
+  "ignorePaths": ["**/.terraform-version"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": false
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": false
+    }
+  ],
+  "platformAutomerge": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "variables.tf"
+      ],
+      "matchStrings": [
+        "\\s*default\\s*=\\s*\"(?<currentValue>.*)\"\\s*//\\s*renovate:\\s*packageName=gitlab-org/gitlab-runner\\s*"
+      ],
+      "depNameTemplate": "gitlab-org/gitlab-runner",
+      "datasourceTemplate": "gitlab-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    }
+  ]
+}

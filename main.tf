@@ -67,7 +67,7 @@ module "runner" {
     tag_list                                      = "runner_worker"
     type                                          = "instance"
     url                                           = "https://gitlab.com"
-    runner_version                                = "17.7.0" # ref: https://gitlab.com/gitlab-org/gitlab-runner/-/releases
+    runner_version                                = "17.7.0" # renovate: packageName=gitlab-org/gitlab-runner
     preregistered_runner_token_ssm_parameter_name = "${module.this.id}-runner-token"
   }
 
