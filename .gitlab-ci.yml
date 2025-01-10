@@ -1,5 +1,9 @@
 ---
 include:
+  - local: .gitlab-ci.local.yml
+    rules:
+      - exists:
+        - .gitlab-ci.local.yml
   - project: renovate-bot/renovate-runner
     file: /templates/renovate-config-validator.gitlab-ci.yml
   - project: guardianproject-ops/projects
