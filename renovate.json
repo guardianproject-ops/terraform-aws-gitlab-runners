@@ -21,13 +21,21 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "variables.tf"
-      ],
+      "fileMatch": ["variables.tf"],
       "matchStrings": [
-        "\\s*default\\s*=\\s*\"(?<currentValue>.*)\"\\s*//\\s*renovate:\\s*packageName=gitlab-org/gitlab-runner\\s*"
+        "\\s*default\\s*=\\s*\"(?<currentValue>.*)\"\\s*#\\s*renovate:\\s*packageName=gitlab-org/gitlab-runner\\s*"
       ],
       "depNameTemplate": "gitlab-org/gitlab-runner",
+      "datasourceTemplate": "gitlab-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["variables.tf"],
+      "matchStrings": [
+        "\\s*default\\s*=\\s*\"(?<currentValue>.*)\"\\s*#\\s*renovate:\\s*packageName=gitlab-org/fleeting/plugins/aws\\s*"
+      ],
+      "depNameTemplate": "gitlab-org/fleeting/plugins/aws",
       "datasourceTemplate": "gitlab-releases",
       "extractVersionTemplate": "^v?(?<version>.*)$"
     }

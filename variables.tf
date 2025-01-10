@@ -43,3 +43,16 @@ variable "worker_ami_owners" {
   type    = list(string)
   default = ["099720109477"]
 }
+
+variable "runner_version" {
+  description = "Gitlab runner version"
+  type        = string
+  default     = "17.7.0" # renovate: packageName=gitlab-org/gitlab-runner
+}
+
+
+variable "fleeting_plugin_version" {
+  description = "Gitlab runner version"
+  type        = string
+  default     = "1.0.0" # renovate: packageName=gitlab-org/fleeting/plugins/aws
+}

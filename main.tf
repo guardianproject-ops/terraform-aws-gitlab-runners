@@ -67,7 +67,7 @@ module "runner" {
     tag_list                                      = "runner_worker"
     type                                          = "instance"
     url                                           = "https://gitlab.com"
-    runner_version                                = "17.7.0" # renovate: packageName=gitlab-org/gitlab-runner
+    runner_version                                = var.runner_version
     preregistered_runner_token_ssm_parameter_name = "${module.this.id}-runner-token"
   }
 
@@ -150,7 +150,13 @@ module "runner" {
   }
 
   runner_worker_docker_autoscaler = {
-    connector_config_user = "ubuntu"
-    # fleeting_plugin_version = "1.0.0" # ref: https://gitlab.com/gitlab-org/fleeting/plugins/aws/-/releases
+    connector_config_user   = "ubuntu"
+    fleeting_plugin_version = var.fleeting_plugin_version
+  }
+  runner_worker_cache = {
+    create          = "true"
+    versioning      = "true"
+    shared          = "true"
+    expiration_days = 7
   }
 }
