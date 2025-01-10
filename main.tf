@@ -73,10 +73,10 @@ module "runner" {
   subnet_id         = local.private_subnet_main_id
 
   runner_gitlab = {
-    tag_list = "runner_worker"
-    type     = "instance"
-    url      = "https://gitlab.com"
-
+    tag_list                                      = "runner_worker"
+    type                                          = "instance"
+    url                                           = "https://gitlab.com"
+    runner_version                                = "17.7.0" # ref: https://gitlab.com/gitlab-org/gitlab-runner/-/releases
     preregistered_runner_token_ssm_parameter_name = "${module.this.id}-runner-token"
   }
 
@@ -160,5 +160,6 @@ module "runner" {
 
   runner_worker_docker_autoscaler = {
     connector_config_user = "ubuntu"
+    # fleeting_plugin_version = "1.0.0" # ref: https://gitlab.com/gitlab-org/fleeting/plugins/aws/-/releases
   }
 }
