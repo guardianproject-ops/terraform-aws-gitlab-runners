@@ -113,3 +113,67 @@ variable "subnet_ids" {
 The list of subnet IDs to use for the Runner Worker when the fleet mode is enabled.
 EOT
 }
+
+variable "tailscale_enabled" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+Set to true to connect the worker and runner agent to tailscale.
+EOT
+}
+
+variable "tailscale_tags_runner" {
+  type    = list(string)
+  default = []
+
+  description = "The list of tags that will be assigned to tailscale node created by this stack."
+  validation {
+    condition = alltrue([
+      for tag in var.tailscale_tags_runner : can(regex("^tag:", tag))
+    ])
+    error_message = "max_allocated_storage: Each tag in tailscale_tags_runner must start with 'tag:'"
+  }
+
+  validation {
+    condition     = var.tailscale_enabled ? var.tailscale_tags_runner != null : true
+    error_message = "If tailscale_enabled is true, then you must set tailscale_tags_runner"
+  }
+}
+
+variable "tailscale_tailnet" {
+  type    = string
+  default = null
+
+  description = <<EOT
+  description = The tailnet domain (or "organization's domain") for your tailscale tailnet, this s found under Settings > General > Organization
+EOT
+
+  validation {
+    condition     = var.tailscale_enabled ? var.tailscale_tailnet != null : true
+    error_message = "If tailscale_enabled is true, then you must set tailscale_tailnet"
+  }
+}
+
+variable "tailscale_client_id_runner" {
+  type        = string
+  default     = null
+  sensitive   = true
+  description = "The OIDC client id for tailscale that has permissions to create auth keys with the `tailscale_tags_runner` tags"
+
+  validation {
+    condition     = var.tailscale_enabled ? var.tailscale_client_id_runner != null : true
+    error_message = "If tailscale_enabled is true, then you must set tailscale_client_id_runner"
+  }
+}
+
+variable "tailscale_client_secret_runner" {
+  type        = string
+  default     = null
+  sensitive   = true
+  description = "The OIDC client secret paired with `tailscale_client_id_runner`"
+
+  validation {
+    condition     = var.tailscale_enabled ? var.tailscale_client_secret_runner != null : true
+    error_message = "If tailscale_enabled is true, then you must set tailscale_client_secret_runner"
+  }
+}

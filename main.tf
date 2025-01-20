@@ -11,6 +11,34 @@ locals {
     #}
   })
 
+
+  authkey_runner_secretsmanager_arn = var.tailscale_enabled ? aws_secretsmanager_secret.authkey_runner[0].arn : ""
+
+  _tailscale_bootstrap_script = <<-EOT
+mkdir -p /etc/systemd/system/tailscale-connect.service.d
+cat > /etc/systemd/system/tailscale-connect.service.d/override.conf << EOF
+[Service]
+Environment="TS_HOSTNAME=@@HOSTNAME@@"
+Environment="TS_SECRET_ARN=${local.authkey_runner_secretsmanager_arn}"
+Environment="TS_EXTRA_ARGS=--ssh"
+EOF
+
+systemctl daemon-reload
+systemctl enable --now tailscaled tailscale-connect
+EOT
+
+  tailscale_bootstrap_script = var.tailscale_enabled ? local._tailscale_bootstrap_script : ""
+
+  runner_pre_install_script = <<-EOT
+tee /etc/hosts <<EOL
+127.0.0.1   localhost localhost.localdomain @@HOSTNAME@@
+EOL
+${local.tailscale_bootstrap_script}
+EOT
+
+  worker_start_script = <<-EOT
+systemctl enable --now docker
+EOT
 }
 
 module "cache" {
@@ -56,6 +84,25 @@ resource "aws_ssm_parameter" "token" {
   tags     = module.instance_label[each.key].tags
 }
 
+data "aws_iam_policy_document" "runner_secrets" {
+  count = var.tailscale_enabled ? 1 : 0
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+    resources = [local.authkey_runner_secretsmanager_arn]
+  }
+}
+
+resource "aws_iam_policy" "gitlab_runner_secrets" {
+  count  = var.tailscale_enabled ? 1 : 0
+  name   = "${module.this.id}-runner-secrets"
+  tags   = module.this.tags
+  policy = data.aws_iam_policy_document.runner_secrets[0].json
+}
+
 module "runner" {
   for_each = var.runner_instances
   source   = "cattle-ops/gitlab-runner/aws"
@@ -81,6 +128,9 @@ module "runner" {
 
   runner_role = {
     additional_tags = module.instance_label[each.key].tags
+    policy_arns = var.tailscale_enabled ? [
+      aws_iam_policy.gitlab_runner_secrets[0].arn
+    ] : []
   }
 
   # This one is definitely required for DIND
@@ -108,7 +158,16 @@ module "runner" {
   }
 
   runner_manager = {
-    maximum_concurrent_jobs = local.capacity_per_instance * each.value.maximum_concurrent_jobs
+    maximum_concurrent_jobs   = local.capacity_per_instance * each.value.maximum_concurrent_jobs
+    prometheus_listen_address = var.tailscale_enabled ? ":9252" : ""
+  }
+
+  runner_install = {
+    pre_install_script = replace(
+      local.runner_pre_install_script,
+      "@@HOSTNAME@@",
+      "${module.instance_label[each.key].id}-runner"
+    )
   }
 
   runner_instance = {
@@ -135,7 +194,11 @@ module "runner" {
   }
 
   runner_worker_docker_autoscaler_instance = {
-    start_script          = file("${path.module}/worker_start.sh")
+    start_script = replace(
+      local.worker_start_script,
+      "@@HOSTNAME@@",
+      "${module.instance_label[each.key].id}-worker"
+    )
     root_size             = 100
     volume_type           = "gp3"
     ebs_optimized         = true

@@ -13,3 +13,11 @@ output "gitlab_user_runners" {
 output "aws_runners" {
   value = module.runner
 }
+
+output "secrets_manager_secret_authkey_arn_runner" {
+  value = var.tailscale_enabled ? aws_secretsmanager_secret.authkey_runner[0].arn : ""
+}
+
+output "secrets_manager_secret_authkey_id_runner" {
+  value = var.tailscale_enabled ? aws_secretsmanager_secret.authkey_runner[0].id : ""
+}
