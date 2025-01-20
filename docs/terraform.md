@@ -20,16 +20,23 @@
 |------|--------|---------|
 | <a name="module_cache"></a> [cache](#module\_cache) | cattle-ops/gitlab-runner/aws//modules/cache | 8.1.0 |
 | <a name="module_instance_label"></a> [instance\_label](#module\_instance\_label) | cloudposse/label/null | 0.25.0 |
+| <a name="module_label_rotate_runner"></a> [label\_rotate\_runner](#module\_label\_rotate\_runner) | cloudposse/label/null | 0.25.0 |
 | <a name="module_runner"></a> [runner](#module\_runner) | cattle-ops/gitlab-runner/aws | 8.1.0 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
+| <a name="module_ts_rotate_runner"></a> [ts\_rotate\_runner](#module\_ts\_rotate\_runner) | guardianproject-ops/lambda-secrets-manager-tailscale/aws | 0.0.2 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_iam_policy.gitlab_runner_secrets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role_policy_attachment.cache_bucket_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_secretsmanager_secret.authkey_runner](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret_rotation.authkey_runner](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_rotation) | resource |
+| [aws_secretsmanager_secret_version.authkey_runner](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [aws_ssm_parameter.token](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [gitlab_user_runner.instance](https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/user_runner) | resource |
+| [aws_iam_policy_document.runner_secrets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
 
@@ -61,6 +68,11 @@
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | Subnet id used for the Runner and Runner Workers. Must belong to the `vpc_id`. In case the fleet mode is used, multiple subnets for<br/>the Runner Workers can be provided with runner\_worker\_docker\_machine\_instance.subnet\_ids. | `string` | n/a | yes |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The list of subnet IDs to use for the Runner Worker when the fleet mode is enabled. | `list(string)` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`).<br/>Neither the tag keys nor the tag values will be modified by this module. | `map(string)` | `{}` | no |
+| <a name="input_tailscale_client_id_runner"></a> [tailscale\_client\_id\_runner](#input\_tailscale\_client\_id\_runner) | The OIDC client id for tailscale that has permissions to create auth keys with the `tailscale_tags_runner` tags | `string` | `null` | no |
+| <a name="input_tailscale_client_secret_runner"></a> [tailscale\_client\_secret\_runner](#input\_tailscale\_client\_secret\_runner) | The OIDC client secret paired with `tailscale_client_id_runner` | `string` | `null` | no |
+| <a name="input_tailscale_enabled"></a> [tailscale\_enabled](#input\_tailscale\_enabled) | Set to true to connect the worker and runner agent to tailscale. | `bool` | `true` | no |
+| <a name="input_tailscale_tags_runner"></a> [tailscale\_tags\_runner](#input\_tailscale\_tags\_runner) | The list of tags that will be assigned to tailscale node created by this stack. | `list(string)` | `[]` | no |
+| <a name="input_tailscale_tailnet"></a> [tailscale\_tailnet](#input\_tailscale\_tailnet) | description = The tailnet domain (or "organization's domain") for your tailscale tailnet, this s found under Settings > General > Organization | `string` | `null` | no |
 | <a name="input_tenant"></a> [tenant](#input\_tenant) | ID element \_(Rarely used, not included by default)\_. A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | n/a | `string` | n/a | yes |
 | <a name="input_worker_ami_filter"></a> [worker\_ami\_filter](#input\_worker\_ami\_filter) | List of maps used to create the AMI filter for the Worker AMI. Should be Ubuntu | `map(list(string))` | <pre>{<br/>  "name": [<br/>    "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"<br/>  ]<br/>}</pre> | no |
@@ -72,5 +84,7 @@
 |------|-------------|
 | <a name="output_aws_runners"></a> [aws\_runners](#output\_aws\_runners) | n/a |
 | <a name="output_gitlab_user_runners"></a> [gitlab\_user\_runners](#output\_gitlab\_user\_runners) | n/a |
+| <a name="output_secrets_manager_secret_authkey_arn_runner"></a> [secrets\_manager\_secret\_authkey\_arn\_runner](#output\_secrets\_manager\_secret\_authkey\_arn\_runner) | n/a |
+| <a name="output_secrets_manager_secret_authkey_id_runner"></a> [secrets\_manager\_secret\_authkey\_id\_runner](#output\_secrets\_manager\_secret\_authkey\_id\_runner) | n/a |
 | <a name="output_ssm_parameter_tokens"></a> [ssm\_parameter\_tokens](#output\_ssm\_parameter\_tokens) | n/a |
 <!-- markdownlint-restore -->
